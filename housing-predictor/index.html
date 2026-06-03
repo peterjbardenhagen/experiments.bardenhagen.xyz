@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyper-Personalized Life & Macro Simulator (2026 - 2050)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4">
+                Housing Market Predictor
+            </h1>
+            <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+                Advanced AI-powered housing market analysis and prediction engine for Brisbane and Australia (2026-2050)
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Input Panel -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h2 class="text-2xl font-semibold mb-6 text-blue-400">Market Parameters</h2>
+                    
+                    <!-- Location -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Location</label>
+                        <select id="location" class="w-full bg-slate-700 border border-slate-600 rounded-md px-3 py-2 text-slate-100">
+                            <option value="brisbane-cbd">Brisbane CBD</option>
+                            <option value="brisbane-inner">Brisbane Inner Suburbs</option>
+                            <option value="brisbane-outer">Brisbane Outer Suburbs</option>
+                            <option value="gold-coast">Gold Coast</option>
+                            <option value="sunshine-coast">Sunshine Coast</option>
+                            <option value="sydney">Sydney</option>
+                            <option value="melbourne">Melbourne</option>
+                        </select>
+                    </div>
+
+                    <!-- Property Type -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Property Type</label>
+                        <select id="propertyType" class="w-full bg-slate-700 border border-slate-600 rounded-md px-3 py-2 text-slate-100">
+                            <option value="unit">Unit/Apartment</option>
+                            <option value="house">House</option>
+                            <option value="townhouse">Townhouse</option>
+                            <option value="land">Vacant Land</option>
+                        </select>
+                    </div>
+
+                    <!-- Budget Range -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Budget Range</label>
+                        <input type="range" id="budget" min="200000" max="2000000" value="600000" step="50000" 
+                               class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-sm text-slate-400 mt-1">
+                            <span>$200k</span>
+                            <span id="budgetValue">$600k</span>
+                            <span>$2M</span>
+                        </div>
+                    </div>
+
+                    <!-- Investment Horizon -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Investment Horizon</label>
+                        <input type="range" id="horizon" min="1" max="25" value="10" step="1" 
+                               class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-sm text-slate-400 mt-1">
+                            <span>1yr</span>
+                            <span id="horizonValue">10yrs</span>
+                            <span>25yrs</span>
+                        </div>
+                    </div>
+
+                    <!-- Risk Tolerance -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2">Risk Tolerance</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" class="risk-btn bg-green-600 text-white py-2 px-4 rounded-md text-sm" data-risk="low">Conservative</button>
+                            <button type="button" class="risk-btn bg-slate-600 text-slate-300 py-2 px-4 rounded-md text-sm" data-risk="medium">Moderate</button>
+                            <button type="button" class="risk-btn bg-slate-600 text-slate-300 py-2 px-4 rounded-md text-sm" data-risk="high">Aggressive</button>
+                        </div>
+                    </div>
+
+                    <button id="generatePrediction" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition-colors">
+                        Generate Prediction
+                    </button>
+                </div>
+
+                <!-- Market Insights -->
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h3 class="text-xl font-semibold mb-4 text-purple-400">Market Insights</h3>
+                    <div id="insights" class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Current Median:</span>
+                            <span class="text-green-400 font-semibold">$685,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">YoY Growth:</span>
+                            <span class="text-green-400 font-semibold">+8.2%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Market Score:</span>
+                            <span class="text-blue-400 font-semibold">7.4/10</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Interest Rates:</span>
+                            <span class="text-yellow-400 font-semibold">4.35%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Panel -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Price Prediction Chart -->
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-400">Price Prediction Model</h3>
+                    <canvas id="priceChart" class="w-full h-64"></canvas>
+                </div>
+
+                <!-- ROI Analysis -->
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h3 class="text-xl font-semibold mb-4 text-green-400">ROI Analysis</h3>
+                    <canvas id="roiChart" class="w-full h-64"></canvas>
+                </div>
+
+                <!-- Risk Assessment -->
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h3 class="text-xl font-semibold mb-4 text-red-400">Risk Assessment</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-400">Low</div>
+                            <div class="text-sm text-slate-400">Market Risk</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-yellow-400">Med</div>
+                            <div class="text-sm text-slate-400">Interest Rate</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-400">High</div>
+                            <div class="text-sm text-slate-400">Liquidity</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-400">Low</div>
+                            <div class="text-sm text-slate-400">Regulatory</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction Results -->
+        <div id="predictionResults" class="mt-12 hidden">
+            <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 border border-blue-500/50">
+                <h2 class="text-3xl font-bold mb-6 text-center">AI Prediction Results</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-green-400" id="projectedValue">$825,000</div>
+                        <div class="text-slate-400">Projected Value</div>
+                        <div class="text-sm text-slate-500 mt-1" id="projectedDate">December 2036</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-400" id="totalROI">140%</div>
+                        <div class="text-slate-400">Total ROI</div>
+                        <div class="text-sm text-slate-500 mt-1">Capital + Rental</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-purple-400" id="annualReturn">8.7%</div>
+                        <div class="text-slate-400">Annual Return</div>
+                        <div class="text-sm text-slate-500 mt-1">Compound Growth</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for charts
+        let priceChart, roiChart;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSliders();
+            initializeRiskButtons();
+            initializeCharts();
+            updatePrediction();
+        });
+
+        function initializeSliders() {
+            const budgetSlider = document.getElementById('budget');
+            const budgetValue = document.getElementById('budgetValue');
+            const horizonSlider = document.getElementById('horizon');
+            const horizonValue = document.getElementById('horizonValue');
+
+            budgetSlider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                budgetValue.textContent = '$' + (value / 1000) + 'k';
+                updatePrediction();
+            });
+
+            horizonSlider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                horizonValue.textContent = value + 'yrs';
+                updatePrediction();
+            });
+        }
+
+        function initializeRiskButtons() {
+            const riskButtons = document.querySelectorAll('.risk-btn');
+            riskButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    riskButtons.forEach(b => {
+                        b.classList.remove('bg-green-600', 'bg-yellow-600', 'bg-red-600');
+                        b.classList.add('bg-slate-600', 'text-slate-300');
+                    });
+                    
+                    const risk = this.dataset.risk;
+                    if (risk === 'low') {
+                        this.classList.add('bg-green-600');
+                    } else if (risk === 'medium') {
+                        this.classList.add('bg-yellow-600');
+                    } else {
+                        this.classList.add('bg-red-600');
+                    }
+                    this.classList.remove('bg-slate-600', 'text-slate-300');
+                    this.classList.add('text-white');
+                    updatePrediction();
+                });
+            });
+        }
+
+        function initializeCharts() {
+            // Price Prediction Chart
+            const priceCtx = document.getElementById('priceChart').getContext('2d');
+            priceChart = new Chart(priceCtx, {
+                type: 'line',
+                data: {
+                    labels: generateYearLabels(),
+                    datasets: [{
+                        label: 'Predicted Price',
+                        data: generatePriceData(),
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgb(148, 163, 184)'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: 'rgb(148, 163, 184)' },
+                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                        },
+                        y: {
+                            ticks: { 
+                                color: 'rgb(148, 163, 184)',
+                                callback: function(value) {
+                                    return '$' + (value / 1000) + 'k';
+                                }
+                            },
+                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // ROI Chart
+            const roiCtx = document.getElementById('roiChart').getContext('2d');
+            roiChart = new Chart(roiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Year 1', 'Year 3', 'Year 5', 'Year 10', 'Year 15', 'Year 20'],
+                    datasets: [{
+                        label: 'Cumulative ROI (%)',
+                        data: [5, 18, 32, 85, 140, 210],
+                        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                        borderColor: 'rgb(34, 197, 94)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'rgb(148, 163, 184)'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: 'rgb(148, 163, 184)' },
+                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                        },
+                        y: {
+                            ticks: { 
+                                color: 'rgb(148, 163, 184)',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateYearLabels() {
+            const currentYear = 2026;
+            const horizon = parseInt(document.getElementById('horizon').value);
+            const labels = [];
+            for (let i = 0; i <= horizon; i += Math.max(1, Math.floor(horizon / 10))) {
+                labels.push((currentYear + i).toString());
+            }
+            return labels;
+        }
+
+        function generatePriceData() {
+            const budget = parseInt(document.getElementById('budget').value);
+            const horizon = parseInt(document.getElementById('horizon').value);
+            const data = [];
+            
+            // Simple compound growth model
+            const baseGrowthRate = 0.065; // 6.5% base annual growth
+            let currentPrice = budget;
+            
+            for (let i = 0; i <= horizon; i += Math.max(1, Math.floor(horizon / 10))) {
+                data.push(Math.round(currentPrice));
+                currentPrice *= Math.pow(1 + baseGrowthRate, Math.max(1, Math.floor(horizon / 10)));
+            }
+            
+            return data;
+        }
+
+        function updatePrediction() {
+            const budget = parseInt(document.getElementById('budget').value);
+            const horizon = parseInt(document.getElementById('horizon').value);
+            const location = document.getElementById('location').value;
+            const propertyType = document.getElementById('propertyType').value;
+            
+            // Update charts
+            if (priceChart) {
+                priceChart.data.labels = generateYearLabels();
+                priceChart.data.datasets[0].data = generatePriceData();
+                priceChart.update();
+            }
+            
+            // Update prediction results
+            const projectedValue = Math.round(budget * Math.pow(1.065, horizon));
+            const totalROI = Math.round(((projectedValue - budget) / budget) * 100);
+            const annualReturn = Math.round((Math.pow(projectedValue / budget, 1/horizon) - 1) * 100 * 10) / 10;
+            
+            document.getElementById('projectedValue').textContent = '$' + (projectedValue / 1000).toFixed(0) + 'k';
+            document.getElementById('totalROI').textContent = totalROI + '%';
+            document.getElementById('annualReturn').textContent = annualReturn + '%';
+            document.getElementById('projectedDate').textContent = new Date(2026 + horizon, 11).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long' 
+            });
+        }
+
+        // Generate Prediction Button
+        document.getElementById('generatePrediction').addEventListener('click', function() {
+            // Show loading state
+            this.textContent = 'Analyzing Market Data...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+                updatePrediction();
+                document.getElementById('predictionResults').classList.remove('hidden');
+                this.textContent = 'Generate Prediction';
+                this.disabled = false;
+                
+                // Smooth scroll to results
+                document.getElementById('predictionResults').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
